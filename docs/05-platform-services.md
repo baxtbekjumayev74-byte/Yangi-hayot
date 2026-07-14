@@ -15,12 +15,12 @@ flowchart TB
     U["📱 User asks in Uzbek / Russian"]
 
     subgraph GUARD_IN["INPUT GUARDRAILS"]
-        LANG["Language & intent detection"]
-        SAFE["Safety classifier<br/>self-harm · crisis · abuse signals"]
-        SCOPE["Scope filter<br/>legal / clinical questions → redirect"]
+        direction LR
+        LANG["Language & intent detection"] ~~~ SAFE["Safety classifier<br/>self-harm · crisis · abuse signals"] ~~~ SCOPE["Scope filter<br/>legal / clinical questions → redirect"]
     end
 
     subgraph CORE["ASSISTANT CORE — ai-service"]
+        direction LR
         ORCH["Orchestrator<br/>conversation state · persona policy"]
         RAG["RAG Retrieval<br/>pgvector knowledge base"]
         KB[("Knowledge Base<br/>platform guides · job/course catalog<br/>motivation content · FAQ<br/>approved by district office")]
@@ -29,20 +29,19 @@ flowchart TB
     end
 
     subgraph GUARD_OUT["OUTPUT GUARDRAILS"]
-        MOD["Response moderation"]
-        CITE["Grounding check<br/>answers cite KB sources"]
-        TONE["Tone: respectful, hopeful, plain language"]
+        direction LR
+        MOD["Response moderation"] ~~~ CITE["Grounding check<br/>answers cite KB sources"] ~~~ TONE["Tone: respectful, hopeful, plain language"]
     end
 
     subgraph ESC["HUMAN ESCALATION"]
-        CRISIS["🚨 Crisis protocol<br/>psychologist alerted ≤ 5 min<br/>+ hotline 1050 shown"]
-        HAND["Handoff to mentor / officer<br/>with user consent"]
+        direction LR
+        CRISIS["🚨 Crisis protocol<br/>psychologist alerted ≤ 5 min<br/>+ hotline 1050 shown"] ~~~ HAND["Handoff to mentor / officer<br/>with user consent"]
     end
 
     U --> GUARD_IN --> ORCH
     ORCH --> RAG --> KB
     ORCH --> CTX
-    ORCH --> LLM --> GUARD_OUT --> U
+    ORCH --> LLM --> GUARD_OUT --> REPLY["✅ Grounded, safe reply<br/>in the user's language"]
     SAFE -->|"risk detected"| CRISIS
     ORCH -->|"needs human"| HAND
 
@@ -52,7 +51,7 @@ flowchart TB
     classDef esc fill:#fce8e6,stroke:#d93025,color:#a50e0e
     class U,LANG,SAFE,SCOPE in
     class ORCH,RAG,KB,CTX,LLM core
-    class MOD,CITE,TONE out
+    class MOD,CITE,TONE,REPLY out
     class CRISIS,HAND esc
 ```
 
@@ -167,17 +166,15 @@ flowchart TB
 ```mermaid
 flowchart TB
     subgraph CLIENTS["Clients"]
-        MC["Mobile App"]
-        WC["Web Panel"]
+        direction LR
+        MC["Mobile App"] ~~~ WC["Web Panel"]
     end
 
     WSGW["WebSocket Gateway<br/>sticky sessions · JWT auth<br/>heartbeat · reconnect"]
 
     subgraph CS["chat-service"]
-        ROOM["Conversation manager<br/>policy-driven membership"]
-        DELIV["Delivery engine<br/>sent → delivered → read"]
-        MODQ["Moderation pipeline<br/>toxicity · threat lexicon (uz/ru)<br/>→ flags to officer, never auto-punish"]
-        MEDIA["Attachment handler<br/>images · voice notes · AV-scanned"]
+        direction LR
+        ROOM["Conversation manager<br/>policy-driven membership"] ~~~ DELIV["Delivery engine<br/>sent → delivered → read"] ~~~ MODQ["Moderation pipeline<br/>toxicity · threat lexicon (uz/ru)<br/>→ flags to officer, never auto-punish"] ~~~ MEDIA["Attachment handler<br/>images · voice notes · AV-scanned"]
     end
 
     RD[("Redis<br/>presence · unread counters<br/>fan-out pub/sub")]
@@ -209,7 +206,7 @@ analytics receives message *counts*, never content.
 ## 22. Calendar Architecture
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph SRC["Event Sources"]
         SUP["Supervision meetings<br/>(officer / prosecutor)"]
         PSYE["Psychology sessions"]

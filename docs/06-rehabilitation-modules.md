@@ -10,7 +10,7 @@ The economic engine of reintegration: verified employers, skill-matched vacancie
 dignified CV that presents the person's future, not their past.
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph SUPPLY["Employer Side"]
         EREG["Employer verification<br/>by district office"]
         VAC["Vacancy management<br/>publish · quotas · incentives info"]
@@ -58,7 +58,7 @@ user consent.
 ## 20. Education Module Architecture
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph PROVIDE["Training Center Side"]
         ACC["Center accreditation<br/>district approval"]
         CAT["Course catalog<br/>welding · electrics · IT · tailoring ·<br/>driving · entrepreneurship"]
@@ -101,7 +101,7 @@ flowchart TB
 ## 21. Digital Library Architecture
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph CONTENT["Content Supply"]
         CUR["Curation board<br/>district office + psychologists"]
         ING["Ingestion pipeline<br/>EPUB · PDF · MP3 · MP4<br/>transcode · watermark"]
@@ -150,7 +150,7 @@ profession explainer series — reviewed by the curation board before publicatio
 ## 23. Goal Tracking Architecture (Goals · Habits · Achievements)
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph SET["Goal Setting"]
         OFFICIAL["Plan goals<br/>from reintegration plan<br/>(officer-agreed)"]
         PERSONAL["Personal goals<br/>user-defined, private by default"]
@@ -196,7 +196,7 @@ not failure messaging. Personal goals stay private; only plan goals surface to s
 The clinically sensitive core. Confidentiality is architectural, not procedural.
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph SELF["Self-Care Layer (User)"]
         MOODT["Mood tracker<br/>2-tap daily check-in + tags"]
         JOUR["Private journal<br/>user-only, encrypted"]

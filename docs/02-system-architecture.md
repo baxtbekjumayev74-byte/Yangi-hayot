@@ -10,58 +10,32 @@ Covers: System Architecture · Backend Microservices · Cloud Infrastructure · 
 flowchart TB
     subgraph L1["CLIENT LAYER"]
         direction LR
-        MA["📱 Flutter Mobile App<br/>User + Family"]
-        WA["🖥️ Next.js Admin Panel<br/>All professional roles"]
-        PP["🤝 Partner Web Portal<br/>Employer · Training Center"]
+        MA["📱 Flutter Mobile App<br/>User + Family"] ~~~ WA["🖥️ Next.js Admin Panel<br/>All professional roles"] ~~~ PP["🤝 Partner Web Portal<br/>Employer · Training Center"]
     end
 
     subgraph L2["EDGE & DELIVERY LAYER"]
         direction LR
-        CDN["CDN + Media Edge<br/>books · audio · video"]
-        WAF["WAF + DDoS Protection"]
-        LB["Load Balancer<br/>TLS 1.3 termination"]
+        CDN["CDN + Media Edge<br/>books · audio · video"] ~~~ WAF["WAF + DDoS Protection"] ~~~ LB["Load Balancer<br/>TLS 1.3 termination"]
     end
 
     subgraph L3["API LAYER"]
         direction LR
-        GW["API Gateway (Kong)<br/>AuthN · rate limits · versioning"]
-        WS["WebSocket Gateway<br/>chat · presence · live updates"]
-        BFF["BFF Aggregators<br/>mobile-bff · admin-bff"]
+        GW["API Gateway (Kong)<br/>AuthN · rate limits · versioning"] ~~~ WS["WebSocket Gateway<br/>chat · presence · live updates"] ~~~ BFF["BFF Aggregators<br/>mobile-bff · admin-bff"]
     end
 
     subgraph L4["SERVICE LAYER — Domain Microservices"]
         direction LR
-        S1["Identity & Access"]
-        S2["Case & Supervision"]
-        S3["Employment"]
-        S4["Education"]
-        S5["Library & Media"]
-        S6["Mental Health"]
-        S7["Goals & Gamification"]
-        S8["Chat & Communication"]
-        S9["AI Assistant"]
-        S10["Notification"]
-        S11["Calendar"]
-        S12["Analytics & Reporting"]
-        S13["Audit"]
+        S1["Supervision Domain<br/>identity · case · risk"] ~~~ S2["Rehabilitation Domain<br/>employment · education · library<br/>mental health · goals"] ~~~ S3["Engagement Domain<br/>chat · AI · calendar · notifications"] ~~~ S4["Insight Domain<br/>analytics · reporting · audit"]
     end
 
     subgraph L5["DATA LAYER"]
         direction LR
-        PG[("PostgreSQL 16<br/>per-service schemas + RLS")]
-        RD[("Redis<br/>cache · sessions · queues")]
-        OS[("OpenSearch<br/>jobs · courses · books")]
-        S3O[("MinIO S3<br/>media · documents")]
-        KF[("Kafka<br/>event backbone")]
-        VDB[("pgvector<br/>AI knowledge base")]
+        PG[("PostgreSQL 16<br/>OLTP + RLS")] ~~~ RD[("Redis")] ~~~ OS[("OpenSearch")] ~~~ S3O[("MinIO S3")] ~~~ KF[("Kafka")] ~~~ VDB[("pgvector")]
     end
 
     subgraph L6["EXTERNAL INTEGRATIONS"]
         direction LR
-        ONEID["OneID e-ID"]
-        FCM["FCM / APNs Push"]
-        SMS["SMS Gateway (Eskiz)"]
-        LLM["LLM Provider<br/>(in-country proxy)"]
+        ONEID["OneID e-ID"] ~~~ FCM["FCM / APNs Push"] ~~~ SMS["SMS Gateway (Eskiz)"] ~~~ LLM["LLM Provider<br/>(in-country proxy)"]
     end
 
     L1 --> L2 --> L3 --> L4 --> L5
@@ -75,7 +49,7 @@ flowchart TB
     class MA,WA,PP c1
     class CDN,WAF,LB c2
     class GW,WS,BFF c3
-    class S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13 c4
+    class S1,S2,S3,S4 c4
     class PG,RD,OS,S3O,KF,VDB c2
     class ONEID,FCM,SMS,LLM c5
 ```
@@ -156,9 +130,8 @@ flowchart TB
 flowchart TB
     subgraph DC1["PRIMARY — Government Cloud, Tashkent (Zone A + Zone B)"]
         subgraph K8S["Kubernetes Cluster (HA control plane)"]
-            NPA["Node Pool: apps<br/>microservices · BFFs<br/>3–12 nodes, autoscale"]
-            NPD["Node Pool: data<br/>Kafka · OpenSearch<br/>dedicated, local SSD"]
-            NPAI["Node Pool: ai<br/>inference / RAG workers"]
+            direction LR
+            NPA["Node Pool: apps<br/>microservices · BFFs<br/>3–12 nodes, autoscale"] ~~~ NPD["Node Pool: data<br/>Kafka · OpenSearch<br/>dedicated, local SSD"] ~~~ NPAI["Node Pool: ai<br/>inference / RAG workers"]
         end
         PGHA[("PostgreSQL HA<br/>Patroni: 1 primary + 2 replicas<br/>across zones")]
         REDIS[("Redis Sentinel")]
@@ -277,39 +250,23 @@ flowchart LR
 ```mermaid
 flowchart TB
     subgraph CLIENTS["Consumers"]
-        M["Mobile App"]
-        W["Admin Panel"]
-        P["Partner Portal"]
+        direction LR
+        M["Mobile App"] ~~~ W["Admin Panel"] ~~~ P["Partner Portal"]
     end
 
     subgraph GATE["API GATEWAY — api.yangihayot.uz"]
-        AUTH["OIDC token validation<br/>JWT + JWKS"]
-        RATE["Rate limiting<br/>per-role quotas"]
-        VER["Versioning<br/>/api/v1 · /api/v2"]
-        AUD2["Access logging → audit"]
+        direction LR
+        AUTH["OIDC token validation<br/>JWT + JWKS"] ~~~ RATE["Rate limiting<br/>per-role quotas"] ~~~ VER["Versioning<br/>/api/v1 · /api/v2"] ~~~ AUD2["Access logging → audit"]
     end
 
     subgraph STYLES["API Styles"]
-        REST["REST + OpenAPI 3.1<br/>domain CRUD & queries"]
-        GRPC["gRPC<br/>service-to-service"]
-        WSS["WebSocket<br/>chat · presence · live dashboards"]
-        WHK["Webhooks<br/>partner callbacks (signed)"]
+        direction LR
+        REST["REST + OpenAPI 3.1<br/>domain CRUD & queries"] ~~~ GRPC["gRPC<br/>service-to-service"] ~~~ WSS["WebSocket<br/>chat · presence · live dashboards"] ~~~ WHK["Webhooks<br/>partner callbacks (signed)"]
     end
 
     subgraph CATALOG["API Catalog (v1)"]
         direction LR
-        A1["/auth · /users · /roles"]
-        A2["/cases · /tasks · /risk"]
-        A3["/jobs · /applications · /cv"]
-        A4["/courses · /enrollments"]
-        A5["/library · /media"]
-        A6["/moods · /sessions"]
-        A7["/goals · /habits · /achievements"]
-        A8["/chats · /messages"]
-        A9["/calendar · /meetings"]
-        A10["/notifications"]
-        A11["/analytics · /reports"]
-        A12["/ai/assistant"]
+        A1["Identity<br/>/auth · /users · /roles"] ~~~ A2["Supervision<br/>/cases · /tasks · /risk"] ~~~ A3["Rehabilitation<br/>/jobs · /cv · /courses · /library<br/>/moods · /goals · /habits"] ~~~ A4["Engagement & Insight<br/>/chats · /calendar · /notifications<br/>/ai/assistant · /analytics · /reports"]
     end
 
     CLIENTS --> GATE --> STYLES --> CATALOG
@@ -321,7 +278,7 @@ flowchart TB
     class M,W,P c
     class AUTH,RATE,VER,AUD2 g
     class REST,GRPC,WSS,WHK s
-    class A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12 a
+    class A1,A2,A3,A4 a
 ```
 
 **API standards**

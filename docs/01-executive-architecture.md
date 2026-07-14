@@ -13,46 +13,32 @@ supervise through governed workspaces; the state receives evidence, not surveill
 flowchart TB
     subgraph CH["EXPERIENCE CHANNELS"]
         direction LR
-        MOB["📱 User Mobile App<br/>iOS · Android · Offline-first"]
-        WEB["🖥️ Professional Web Panel<br/>Prosecutors · Officers · Specialists"]
-        FAM["👪 Family Portal<br/>Limited, consent-based"]
-        PRT["🤝 Partner Portal<br/>Employers · Training Centers"]
+        MOB["📱 User Mobile App<br/>iOS · Android · Offline-first"] ~~~ WEB["🖥️ Professional Web Panel<br/>Prosecutors · Officers · Specialists"] ~~~ FAM["👪 Family Portal<br/>Limited, consent-based"] ~~~ PRT["🤝 Partner Portal<br/>Employers · Training Centers"]
     end
 
     subgraph CAP["PLATFORM CAPABILITIES"]
-        direction LR
-        subgraph REHAB["Rehabilitation Services"]
-            EMP["Employment<br/>& CV Builder"]
-            EDU["Education<br/>& Courses"]
-            LIB["Digital Library<br/>& Audiobooks"]
-            MH["Mental Health<br/>& Mood"]
-            GOAL["Goals · Habits<br/>· Achievements"]
+        subgraph SUP["Supervision Services"]
+            direction LR
+            CASE["Case & Task<br/>Management"] ~~~ RISK["Risk & Progress<br/>Indicators"] ~~~ RPT["Reporting<br/>& Analytics"]
         end
         subgraph ENG["Engagement Services"]
-            CHAT["Secure Chat<br/>& Mentoring"]
-            AI["AI Assistant<br/>(guarded)"]
-            CAL["Calendar<br/>& Meetings"]
-            NOTIF["Notifications"]
+            direction LR
+            CHAT["Secure Chat<br/>& Mentoring"] ~~~ AI["AI Assistant<br/>(guarded)"] ~~~ CAL["Calendar<br/>& Meetings"] ~~~ NOTIF["Notifications"]
         end
-        subgraph SUP["Supervision Services"]
-            CASE["Case & Task<br/>Management"]
-            RISK["Risk & Progress<br/>Indicators"]
-            RPT["Reporting<br/>& Analytics"]
+        subgraph REHAB["Rehabilitation Services"]
+            direction LR
+            EMP["Employment<br/>& CV Builder"] ~~~ EDU["Education<br/>& Courses"] ~~~ LIB["Digital Library<br/>& Audiobooks"] ~~~ MH["Mental Health<br/>& Mood"] ~~~ GOAL["Goals · Habits<br/>· Achievements"]
         end
     end
 
     subgraph FND["TRUSTED FOUNDATION"]
         direction LR
-        IDP["Identity & Access<br/>OneID · Keycloak · MFA"]
-        SEC["Security & Audit<br/>Immutable logs · Encryption"]
-        DATA["Sovereign Data Platform<br/>PostgreSQL · Kafka · S3 (in-country)"]
-        INFRA["Cloud Infrastructure<br/>Kubernetes · Tashkent + DR"]
+        IDP["Identity & Access<br/>OneID · Keycloak · MFA"] ~~~ SEC["Security & Audit<br/>Immutable logs · Encryption"] ~~~ DATA["Sovereign Data Platform<br/>PostgreSQL · Kafka · S3 (in-country)"] ~~~ INFRA["Cloud Infrastructure<br/>Kubernetes · Tashkent + DR"]
     end
 
     subgraph GOV["GOVERNMENT INTEGRATION"]
-        ONEID["OneID<br/>National e-ID"]
-        SMSGW["SMS Gateway<br/>Eskiz / Playmobile"]
-        EGOV["E-Gov Registries<br/>(roadmap)"]
+        direction LR
+        ONEID["OneID<br/>National e-ID"] ~~~ SMSGW["SMS Gateway<br/>Eskiz / Playmobile"] ~~~ EGOV["E-Gov Registries<br/>(roadmap)"]
     end
 
     CH --> CAP --> FND
@@ -89,14 +75,13 @@ flowchart TB
     ODPO["Other District Offices<br/>Surxondaryo (13)<br/><i>Phase 2 rollout</i>"]
 
     subgraph FIELD["District Operations — Sherobod"]
-        PO["👮 Probation Officers<br/>caseload ≤ 25 users each"]
-        PSY["🧠 Psychologists"]
-        MEN["🤝 Mentors<br/>vetted community volunteers"]
+        direction LR
+        PO["👮 Probation Officers<br/>caseload ≤ 25 users each"] ~~~ PSY["🧠 Psychologists"] ~~~ MEN["🤝 Mentors<br/>vetted community volunteers"]
     end
 
     subgraph ECO["Local Ecosystem Partners"]
-        EMPL["🏭 Employers"]
-        TC["🎓 Training Centers"]
+        direction LR
+        EMPL["🏭 Employers"] ~~~ TC["🎓 Training Centers"]
     end
 
     USERS["👤 ~50 Probation Users<br/>+ 👪 Family Members (limited)"]

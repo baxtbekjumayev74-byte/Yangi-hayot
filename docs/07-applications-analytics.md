@@ -12,10 +12,8 @@ flowchart TB
     SPLASH["Splash / PIN · Biometric"] --> HOME
 
     subgraph HOME["🏠 HOME DASHBOARD"]
-        MOTIV["🌅 Daily Motivation<br/>quote · verse · story"]
-        TODAY["✅ Today: 3 focus actions"]
-        RINGS["Progress rings<br/>habits · learning · reading"]
-        QUICK["Quick mood check-in"]
+        direction LR
+        MOTIV["🌅 Daily Motivation<br/>quote · verse · story"] ~~~ TODAY["✅ Today: 3 focus actions"] ~~~ RINGS["Progress rings<br/>habits · learning · reading"] ~~~ QUICK["Quick mood check-in"]
     end
 
     subgraph GROW["🌱 GROWTH"]
@@ -213,14 +211,13 @@ suppressed to prevent indirect identification.
 ```mermaid
 flowchart TB
     subgraph DEF["Report Definitions"]
-        T1["Weekly caseload report<br/>(officer)"]
-        T2["Monthly district KPI report<br/>(district prosecutor)"]
-        T3["Quarterly regional analytics<br/>(regional prosecutor)"]
-        T4["Pilot evaluation report<br/>(steering committee)"]
-        T5["Ad-hoc case summary<br/>(court / official request)"]
+        direction LR
+        T1["Weekly caseload report<br/>(officer)"] ~~~ T2["Monthly district KPI report<br/>(district prosecutor)"] ~~~ T3["Quarterly regional analytics<br/>(regional prosecutor)"]
+        T4["Pilot evaluation report<br/>(steering committee)"] ~~~ T5["Ad-hoc case summary<br/>(court / official request)"]
     end
 
     subgraph GEN["reporting-service"]
+        direction LR
         SCHEDR["Scheduler<br/>cron + on-demand"]
         BUILD["Report builder<br/>templates (uz-Cyrl official format)<br/>charts · tables · narrative blocks"]
         RENDER["Renderer<br/>PDF (signed) · Excel"]
@@ -228,9 +225,8 @@ flowchart TB
     end
 
     subgraph GOVR["Governance"]
-        SCOPEC["Jurisdiction check<br/>data ≤ requester scope"]
-        WATERM["Watermark + recipient stamp"]
-        AUDR["Every generation & download<br/>→ audit trail"]
+        direction LR
+        SCOPEC["Jurisdiction check<br/>data ≤ requester scope"] ~~~ WATERM["Watermark + recipient stamp"] ~~~ AUDR["Every generation & download<br/>→ audit trail"]
     end
 
     STORE2[("Report archive<br/>MinIO, retention policy")]

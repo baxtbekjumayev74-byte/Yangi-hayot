@@ -12,8 +12,8 @@ and **officials/partners** (web, OneID or corporate credentials + mandatory MFA)
 ```mermaid
 flowchart TB
     subgraph ACTORS["Entry Points"]
-        MU["📱 User / Family<br/>Mobile App"]
-        AU["🖥️ Officials & Partners<br/>Web Panel"]
+        direction LR
+        MU["📱 User / Family<br/>Mobile App"] ~~~ AU["🖥️ Officials & Partners<br/>Web Panel"]
     end
 
     subgraph IAM["IDENTITY PLATFORM"]
@@ -24,9 +24,8 @@ flowchart TB
     end
 
     subgraph TOKENS["Token Model"]
-        AT["Access Token — JWT, 15 min<br/>claims: roles, district_id, caseload"]
-        RT["Refresh Token — rotating<br/>mobile 30d · web 8h"]
-        DK["Device Binding<br/>attested device key (mobile)"]
+        direction LR
+        AT["Access Token — JWT, 15 min<br/>claims: roles, district_id, caseload"] ~~~ RT["Refresh Token — rotating<br/>mobile 30d · web 8h"] ~~~ DK["Device Binding<br/>attested device key (mobile)"]
     end
 
     MU -->|"first login: OneID"| KC
@@ -125,32 +124,28 @@ flowchart LR
 ```mermaid
 flowchart TB
     subgraph L1["1 · PERIMETER"]
-        WAF["WAF · Anti-DDoS · Geo-fencing (UZ)"]
-        TLS["TLS 1.3 everywhere · HSTS · cert pinning (mobile)"]
+        direction LR
+        WAF["WAF · Anti-DDoS · Geo-fencing (UZ)"] ~~~ TLS["TLS 1.3 everywhere · HSTS · cert pinning (mobile)"]
     end
     subgraph L2["2 · IDENTITY"]
-        OIDC["OIDC + MFA + device binding"]
-        PAM["Privileged access management for admins"]
+        direction LR
+        OIDC["OIDC + MFA + device binding"] ~~~ PAM["Privileged access management for admins"]
     end
     subgraph L3["3 · APPLICATION"]
-        RBAC["RBAC + ABAC guards on every endpoint"]
-        VAL["Input validation · OWASP ASVS L2"]
-        SAST["SAST / DAST / dependency scanning in CI"]
+        direction LR
+        RBAC["RBAC + ABAC guards on every endpoint"] ~~~ VAL["Input validation · OWASP ASVS L2"] ~~~ SAST["SAST / DAST / dependency scanning in CI"]
     end
     subgraph L4["4 · SERVICE MESH"]
-        MTLS["mTLS between services"]
-        NP["Network policies · zero-trust east-west"]
+        direction LR
+        MTLS["mTLS between services"] ~~~ NP["Network policies · zero-trust east-west"]
     end
     subgraph L5["5 · DATA"]
-        ENC["AES-256 at rest · column crypto for PII"]
-        RLS["Row-level security by district"]
-        DLP["Pseudonymization for analytics"]
-        VLT["Vault-managed keys · rotation 90d"]
+        direction LR
+        ENC["AES-256 at rest · column crypto for PII"] ~~~ RLS["Row-level security by district"] ~~~ DLP["Pseudonymization for analytics"] ~~~ VLT["Vault-managed keys · rotation 90d"]
     end
     subgraph L6["6 · DETECTION & RESPONSE"]
-        SIEM["SIEM correlation · anomaly alerts"]
-        AUD["Immutable audit trail"]
-        IR["Incident response runbooks · 24/7 on-call"]
+        direction LR
+        SIEM["SIEM correlation · anomaly alerts"] ~~~ AUD["Immutable audit trail"] ~~~ IR["Incident response runbooks · 24/7 on-call"]
     end
 
     L1 --> L2 --> L3 --> L4 --> L5 --> L6
